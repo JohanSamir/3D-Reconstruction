@@ -27,3 +27,4 @@ write_point_cloud('/home/johan/repos/GitHub/3D-Reconstruction/Dataset_pcd/Hokuyo
 pcd_load = read_point_cloud('/home/johan/repos/GitHub/3D-Reconstruction/Dataset_pcd/Hokuyo_'+str(num)+'.pcd')
 draw_geometries([pcd_load])
 #:::::::::::::::::::::::::::::::::::
+

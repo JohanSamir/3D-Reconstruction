@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
-
-
+  
 
 #:::::::::::::::::::::::::::::::::::
 #0-1
@@ -37,13 +36,58 @@ T3_4F = T0_1 * T1_2 * T2_3 * T3_4
 T4_5F = T0_1 * T1_2 * T2_3 * T3_4 * T4_5
 T5_6F = T0_1 * T1_2 * T2_3 * T3_4 * T4_5 * T5_6
 
+
+PointCloudFinal = np.array([])
+
+for i in range (0,6):
+	
+	# command line arguments are stored in the form 
+	# of list in sys.argv 
+	num = raw_input(" Enter PointCloud ")
+
+	#:::::::::::::::::::::::::::::::::::
+	# Reading a CSV file
+	a = pd.read_csv('/home/johan/repos/GitHub/3D-Reconstruction/Dataset_csv/Hokuyo_'+str(num)+'.csv') 
+	print ('a.shape',a.shape)
+	b = a.loc[:,"x":"z"]
+	print (b.shape, type(b))
+
+	# Converting to Numpy file
+	c = np.array(b)
+	print ('c',type(c), c.shape)
+	#:::::::::::::::::::::::::::::::::::
+	
+
+	if i == 0:
+		PointCloudFinal = c
+
+	elif i == 1:
+		c = c* T0_1
+		PointCloudFinal = np.concatenate((PointCloudFinal, c))
+
+	elif i == 2:
+		c = c * T1_2F
+		PointCloudFinal = np.concatenate((PointCloudFinal, c))
+
+	elif i == 3:
+		c = c * T2_3F
+		PointCloudFinal = np.concatenate((PointCloudFinal, c))
+
+	elif i == 4:
+		c = c * T3_4F
+		PointCloudFinal = np.concatenate((PointCloudFinal, c))
+
+	elif i == 5:
+		c = c * T4_5F
+		PointCloudFinal = np.concatenate((PointCloudFinal, c))
+
+	else i == 6:
+		c = c * T5_6F
+		PointCloudFinal = np.concatenate((PointCloudFinal, c))
+
+	# Saving the PointCloud in PC
+pcd = PointCloud()
+pcd.points = Vector3dVector(c)
+write_point_cloud('/home/johan/repos/GitHub/3D-Reconstruction/Dataset_pcd/Hokuyo_'+str(num)+'.pcd', pcd)
+
 #:::::::::::::::::::::::::::::::::::
-num = 10
-# Reading a CSV file
-a = pd.read_csv('/home/johan/repos/GitHub/3D-Reconstruction/Dataset_csv/Hokuyo_'+str(num)+'.csv') 
-print ('a.shape',a.shape)
-b = a.loc[:,"x":"z"]
-print (b.shape, type(b))
-
-
-
