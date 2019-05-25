@@ -48,58 +48,64 @@ for i in range (0,6):
 	#:::::::::::::::::::::::::::::::::::
 	# Reading a CSV file
 	a = pd.read_csv('/home/johan/repos/GitHub/3D-Reconstruction/Dataset_csv/Hokuyo_'+str(num)+'.csv') 
-	print ('a.shape',a.shape)
+	#print ('a.shape',a.shape)
 	b = a.loc[:,"x":"z"]
 	print ('b',b.shape, type(b))
 
 	# Converting to Numpy file
-	c = np.array(b)
-	print ('shape:',c.shape[1])
-	f = np.ones((c.shape[0],1))
-	print ('f:',f.shape)
+	g = np.array(b)
+	#print ('shape:',c.shape[1])
+	f = np.ones((g.shape[0],1))
+	#print ('f:',f.shape)
 
-	c = np.hstack((c,f))
-	print ('shape:',c.shape[1])
-
+	c = np.hstack((g,f))
+	#print ('shape:',c.shape[1])
 
 	c = np.transpose(c)
 	print ('c',type(c), c.shape)
 	#:::::::::::::::::::::::::::::::::::
 	
-
 	if i == 0:
-		PointCloudFinal = c
+		PointCloudFinal = np.transpose(g)
 		print ('PointCloudFinal ',PointCloudFinal.shape)
 
 	elif i == 1:
 		c = np.dot(T0_1,c)
-		print ('PointCloudFinal--C ',c.shape)
+		#print ('PointCloudFinal--C ',c.shape)
 		#PointCloudFinal = np.append(PointCloudFinal, c)
-		PointCloudFinal = np.concatenate((PointCloudFinal, c), axis=0)
+		PointCloudFinal = np.concatenate((PointCloudFinal, c), axis=1)
 		print ('PointCloudFinal ',PointCloudFinal.shape)
 
 	elif i == 2:
-		c = np.dpt(T1_2F,c)
-		PointCloudFinal = np.append(PointCloudFinal, c)
+		c = np.dot(T1_2F,c)
+		PointCloudFinal = np.concatenate((PointCloudFinal, c), axis=1)
 		print ('PointCloudFinal ',PointCloudFinal.shape)
 
 	elif i == 3:
 		c = np.dot(T2_3F,c)
-		PointCloudFinal = np.concatenate((PointCloudFinal, c))
+		PointCloudFinal = np.concatenate((PointCloudFinal, c), axis=1)
+		print ('PointCloudFinal ',PointCloudFinal.shape)
 
 	elif i == 4:
-		c = c * T3_4F
-		PointCloudFinal = np.concatenate((PointCloudFinal, c))
+		c = np.dot(T3_4F,c)
+		PointCloudFinal = np.concatenate((PointCloudFinal, c), axis=1)
+		print ('PointCloudFinal ',PointCloudFinal.shape)
 
 	elif i == 5:
-		c = c * T4_5F
-		PointCloudFinal = np.concatenate((PointCloudFinal, c))
+		c = np.dot(T4_5F,c)
+		PointCloudFinal = np.concatenate((PointCloudFinal, c), axis=1)
+		print ('PointCloudFinal ',PointCloudFinal.shape)
 
 	else:
-		c = c * T5_6F
-		PointCloudFinal = np.concatenate((PointCloudFinal, c))
+		c = np.dot(T5_6F,c)
+		PointCloudFinal = np.concatenate((PointCloudFinal, c), axis=1)
+		print ('PointCloudFinal ',PointCloudFinal.shape)
 
 	# Saving the PointCloud in PC
+
+c = np.transpose(c)
+print ('c',type(c), c.shape)
+
 pcd = PointCloud()
 pcd.points = Vector3dVector(c)
 write_point_cloud('/home/johan/repos/GitHub/3D-Reconstruction/Dataset_pcd/FinalPoint.pcd', pcd)
