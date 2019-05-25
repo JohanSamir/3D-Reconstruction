@@ -69,14 +69,19 @@ for i in range (0,6):
 
 	if i == 0:
 		PointCloudFinal = c
+		print ('PointCloudFinal ',PointCloudFinal.shape)
 
 	elif i == 1:
 		c = np.dot(T0_1,c)
-		PointCloudFinal = np.append((PointCloudFinal, c))
+		print ('PointCloudFinal--C ',c.shape)
+		#PointCloudFinal = np.append(PointCloudFinal, c)
+		PointCloudFinal = np.concatenate((PointCloudFinal, c), axis=0)
+		print ('PointCloudFinal ',PointCloudFinal.shape)
 
 	elif i == 2:
 		c = np.dpt(T1_2F,c)
-		PointCloudFinal = np.concatenate((PointCloudFinal, c))
+		PointCloudFinal = np.append(PointCloudFinal, c)
+		print ('PointCloudFinal ',PointCloudFinal.shape)
 
 	elif i == 3:
 		c = np.dot(T2_3F,c)
