@@ -39,7 +39,7 @@ T5_6F = T0_1 * T1_2 * T2_3 * T3_4 * T4_5 * T5_6
 
 PointCloudFinal = np.array([])
 
-for i in range (0,6):
+for i in range (0,7):
 	
 	# command line arguments are stored in the form 
 	# of list in sys.argv 
@@ -96,7 +96,7 @@ for i in range (0,6):
 		PointCloudFinal = np.concatenate((PointCloudFinal, c), axis=1)
 		print ('PointCloudFinal ',PointCloudFinal.shape)
 
-	else:
+	elif i == 6:
 		c = np.dot(T5_6F,c)
 		PointCloudFinal = np.concatenate((PointCloudFinal, c), axis=1)
 		print ('PointCloudFinal ',PointCloudFinal.shape)
