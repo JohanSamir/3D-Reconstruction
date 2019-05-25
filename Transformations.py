@@ -109,5 +109,6 @@ print ('c',type(c), c.shape)
 pcd = PointCloud()
 pcd.points = Vector3dVector(c)
 write_point_cloud('/home/johan/repos/GitHub/3D-Reconstruction/Dataset_pcd/FinalPoint.pcd', pcd)
+np.savetxt('home/johan/repos/GitHub/3D-Reconstruction/Dataset_pcd/FinalPoint.csv', c)
 
 #:::::::::::::::::::::::::::::::::::
