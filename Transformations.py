@@ -36,7 +36,12 @@ T3_4F = T0_1 * T1_2 * T2_3 * T3_4
 T4_5F = T0_1 * T1_2 * T2_3 * T3_4 * T4_5
 T5_6F = T0_1 * T1_2 * T2_3 * T3_4 * T4_5 * T5_6
 
+#def savePoint(PointCloudFinal,num):
+	#PointCloudFinalTra = np.transpose(PointCloudFinal)
+	#print('shape:',PointCloudFinalTra.shape)
+	#x = np.savetxt('/home/johan/repos/GitHub/3D-Reconstruction/Dataset_pcd/Hokuyo_Transf_'+str(num)+'.csv',PointCloudFinalTra) 
 
+	
 PointCloudFinal = np.array([])
 
 for i in range (0,7):
@@ -54,6 +59,7 @@ for i in range (0,7):
 
 	# Converting to Numpy file
 	g = np.array(b)
+	#x = np.savetxt('/home/johan/repos/GitHub/3D-Reconstruction/Dataset_pcd/Hokuyo_'+str(num)+'.csv',g) 
 	#print ('shape:',c.shape[1])
 	f = np.ones((g.shape[0],1))
 	#print ('f:',f.shape)
@@ -67,7 +73,9 @@ for i in range (0,7):
 	
 	if i == 0:
 		PointCloudFinal = np.transpose(g)
-		print ('PointCloudFinal ',PointCloudFinal.shape)
+		print ('P1ointCloudFinal ',PointCloudFinal.shape)
+		#savePoint(PointCloudFinal,num)
+		x = np.savetxt('/home/johan/repos/GitHub/3D-Reconstruction/Dataset_pcd/Hokuyo_Transf_'+str(num)+'.csv',np.transpose(PointCloudFinal)) 
 
 	elif i == 1:
 		c = np.dot(T0_1,c)
@@ -75,31 +83,43 @@ for i in range (0,7):
 		#PointCloudFinal = np.append(PointCloudFinal, c)
 		PointCloudFinal = np.concatenate((PointCloudFinal, c), axis=1)
 		print ('PointCloudFinal ',PointCloudFinal.shape)
-
+		#savePoint(PointCloudFinal,num)
+		
 	elif i == 2:
 		c = np.dot(T1_2F,c)
 		PointCloudFinal = np.concatenate((PointCloudFinal, c), axis=1)
 		print ('PointCloudFinal ',PointCloudFinal.shape)
+		#savePoint(PointCloudFinal,num)
+		x = np.savetxt('/home/johan/repos/GitHub/3D-Reconstruction/Dataset_pcd/Hokuyo_Transf_'+str(num)+'.csv',np.transpose(PointCloudFinal)) 
+
 
 	elif i == 3:
 		c = np.dot(T2_3F,c)
 		PointCloudFinal = np.concatenate((PointCloudFinal, c), axis=1)
 		print ('PointCloudFinal ',PointCloudFinal.shape)
+		#savePoint(PointCloudFinal,num)
 
 	elif i == 4:
 		c = np.dot(T3_4F,c)
 		PointCloudFinal = np.concatenate((PointCloudFinal, c), axis=1)
 		print ('PointCloudFinal ',PointCloudFinal.shape)
+		#savePoint(PointCloudFinal,num)
+		x = np.savetxt('/home/johan/repos/GitHub/3D-Reconstruction/Dataset_pcd/Hokuyo_Transf_'+str(num)+'.csv',np.transpose(PointCloudFinal)) 
+
 
 	elif i == 5:
 		c = np.dot(T4_5F,c)
 		PointCloudFinal = np.concatenate((PointCloudFinal, c), axis=1)
 		print ('PointCloudFinal ',PointCloudFinal.shape)
+		#savePoint(PointCloudFinal,num)
 
 	elif i == 6:
 		c = np.dot(T5_6F,c)
 		PointCloudFinal = np.concatenate((PointCloudFinal, c), axis=1)
 		print ('PointCloudFinal ',PointCloudFinal.shape)
+		#savePoint(PointCloudFinal,num)
+		x = np.savetxt('/home/johan/repos/GitHub/3D-Reconstruction/Dataset_pcd/Hokuyo_Transf_'+str(num)+'.csv',np.transpose(PointCloudFinal)) 
+
 
 	# Saving the PointCloud in PC
 
@@ -109,6 +129,6 @@ print ('c',type(c), c.shape)
 pcd = PointCloud()
 pcd.points = Vector3dVector(c)
 write_point_cloud('/home/johan/repos/GitHub/3D-Reconstruction/Dataset_pcd/FinalPoint.pcd', pcd)
-np.savetxt('home/johan/repos/GitHub/3D-Reconstruction/Dataset_pcd/FinalPoint.csv', c)
+np.savetxt('Dataset_pcd/FinalPoint_1.csv', c)
 
 #:::::::::::::::::::::::::::::::::::
