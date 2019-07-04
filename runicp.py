@@ -15,7 +15,7 @@ if __name__ == '__main__':
 	
 	#--------------- correr el ejecutable de c++ ------------------
 	#runicp = subprocess.Popen([os.path.join(icp_path,"icp_simple"),pointcloud1_path,pointcloud2_path],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-	runicp = subprocess.Popen([os.path.join(icp_path,"icp_simple"),pointcloud1_path,pointcloud2_path,'HI'],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+	runicp = subprocess.Popen([os.path.join(icp_path,"icp_simple"),pointcloud1_path,pointcloud2_path,'Out'],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
 	runicp.wait()
 
 	#-------------leer los datos de devuelve en el terminal------
