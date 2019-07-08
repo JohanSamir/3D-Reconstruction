@@ -49,7 +49,8 @@ for cont in range (0,len(file_list)):
 	#idx = Velopoints[:,0]<5
 	#Velopoints = np.delete(Velopoints, np.where(idx),0)
 	Velopoints = Velopoints[:,0:3]
-	np.savetxt("/home/johan/Desktop/UAO Projects_2 final/KitiiDatabase/PointCloud_CSV_kitti/"+nombre_point, Velopoints,  header='x,y,z', delimiter='')
+	print(Velopoints.shape, Velopoints)
+	np.savetxt("/home/johan/Desktop/UAO Projects_2 final/KitiiDatabase/PointCloud_CSV_kitti_1/"+nombre_point, Velopoints,  header='x,y,z', delimiter=',',comments='')
 	#print(type(Velopoints3P),Velopoints3P.shape)
 	#Velopoints3P_3D_Plot = Velopoints3P
 	print(cont)
