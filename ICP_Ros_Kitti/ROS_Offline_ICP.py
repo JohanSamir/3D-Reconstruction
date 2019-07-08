@@ -80,7 +80,7 @@ def main(args):
 	#print(len(file_list))
 	#print(type(file_list[0]),file_list[0:8])
 	sc = synchronizer(file_list)
-	sc.
+	sc.selec()
   
   try:
     rospy.spin()
