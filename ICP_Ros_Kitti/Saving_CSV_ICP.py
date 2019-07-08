@@ -52,9 +52,9 @@ class synchronizer:
 		lidarPointsXYZ = lidar[:,0:3]
 		np.savetxt("/home/johan/Documents/Alignment/Points_csv/"+nombre_pointcsv+".csv",lidarPointsXYZ, header='x,y,z', comments='')
 		pcd = opn3.PointCloud()
-		pcd.points = opn3.Vector3dVector(lidarPointsXYZ)
-		opn3.write_point_cloud("/home/johan/Documents/Alignment/Points/"+nombre_point, pcd) 
-		self.cont = self.cont + 1
+		#pcd.points = opn3.Vector3dVector(lidarPointsXYZ)
+		#opn3.write_point_cloud("/home/johan/Documents/Alignment/Points/"+nombre_point, pcd) 
+		#self.cont = self.cont + 1
 
 def main(args):
   print('Starting...')
