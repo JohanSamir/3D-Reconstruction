@@ -44,13 +44,13 @@ for cont in range (0,len(file_list)):
 	#print(Velopoints[0],Velopoints[1])
 	Velopoints = np.asarray(Velopoints, np.float32)
 	#Subsamling, Sparse
-	Velopoints = Velopoints[::2]
+	#Velopoints = Velopoints[::2]
 	#Pointins junt in FRONT of the CAMERA
 	#idx = Velopoints[:,0]<5
 	#Velopoints = np.delete(Velopoints, np.where(idx),0)
-	Velopoints = Velopoints[:,0:3]
+	Velopoints = Velopoints[:,0:4]
 	print(Velopoints.shape, Velopoints)
-	np.savetxt("/home/johan/Desktop/UAO Projects_2 final/KitiiDatabase/PointCloud_CSV_kitti_1/"+nombre_point, Velopoints,  header='x,y,z', delimiter=',',comments='')
+	np.savetxt("/home/johan/Desktop/UAO Projects_2 final/KitiiDatabase/PointCloud_CSVKitti_xyzr/"+nombre_point, Velopoints,  header='x,y,z,r', delimiter=',',comments='')
 	#print(type(Velopoints3P),Velopoints3P.shape)
 	#Velopoints3P_3D_Plot = Velopoints3P
 	print(cont)
