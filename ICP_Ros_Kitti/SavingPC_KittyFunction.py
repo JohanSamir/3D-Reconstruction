@@ -4,6 +4,7 @@ import cv2
 import matplotlib.pyplot as plt
 from tensorflow.python.platform import gfile
 import os
+import open3d as opn3
 
 
 '''Image and Sparse Laser Fusion'''
@@ -39,6 +40,7 @@ for cont in range (0,len(file_list)):
 		num = "0"
 
 	nombre_point = "points"+str(numid)+str(cont)+".csv"
+	nombre_point_pcd = "points"+str(numid)+str(cont)+".pcd"
 	Velopoints = dataset.get_velo(cont) #dataset.get_velo(15)
 	#print(type(Velopoints), next(iter(Velopoints)))
 	#print(Velopoints[0],Velopoints[1])
@@ -50,7 +52,12 @@ for cont in range (0,len(file_list)):
 	#Velopoints = np.delete(Velopoints, np.where(idx),0)
 	Velopoints = Velopoints[:,0:4]
 	print(Velopoints.shape, Velopoints)
-	np.savetxt("/home/johan/Desktop/UAO Projects_2 final/KitiiDatabase/PointCloud_CSVKitti_xyzr/"+nombre_point, Velopoints,  header='x,y,z,r', delimiter=',',comments='')
+	#np.savetxt("/home/johan/Desktop/UAO Projects_2 final/KitiiDatabase/PointCloud_CSVKitti_xyzr/"+nombre_point, Velopoints,  header='x,y,z,r', delimiter=',',comments='')
+	
 	#print(type(Velopoints3P),Velopoints3P.shape)
 	#Velopoints3P_3D_Plot = Velopoints3P
+	
 	print(cont)
+	pcd = opn3.PointCloud()
+	pcd.points = opn3.Vector3dVector(Velopoints[:,0:3])
+	opn3.write_point_cloud("/home/johan/Documents/Alignment/DatasetKitti/PCD/"+nombre_point_pcd, pcd)
