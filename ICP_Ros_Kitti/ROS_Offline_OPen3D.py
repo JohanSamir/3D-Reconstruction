@@ -15,77 +15,53 @@ import os
 from pandas import DataFrame
 import pandas as pd
 from tensorflow.python.platform import gfile
+import matplotlib.pyplot as plt
+import FusionData
 
-
-class synchronizer():
+class DepthStimationMain():
 
 	def __init__(self):
 
 		self.pc_pub = rospy.Publisher('/Dense',PointCloud2,queue_size=2)
-		self.pc_pub2 = rospy.Publisher('/Dense_ICP',PointCloud2,queue_size=2)
+		self.image_pub = rospy.Publisher("/image_output",Image, queue_size = 2)
 		self.a = 0
-		self.PCdense = np.array([])
-		self.ms = PointCloud2()
-		self.mss = PointCloud2()
-	
-	def selec(self, file_list):
-		# There are approximately 154 pointclouds
-		for point_dir in file_list[0:len(file_list):2]:
-			if self.a == 0:
-				refe = pd.read_csv(point_dir)
-				df = DataFrame(refe, columns= ['x', 'y','z'])
-				pointcloud1_path_refe = "/home/johan/Desktop/UAO Projects_2 final/KitiiDatabase/PointCloud_CSV_kitti_1/refe_kitti.csv"
-				export_csv = df.to_csv (pointcloud1_path_refe, index = None, header=True) #Don't forget to add '.csv' at the end of the path
-				self.PCdense = np.array(list(df))
-				self.ms.data = self.PCdense
-				self.pc_pub.publish(self.ms)
-				self.mss.data = self.PCdense
-				self.pc_pub2.publish(self.mss)
-				print(self.a)
 
-			else:
-				ref = pd.read_csv(point_dir)
-				df = np.array(DataFrame(refe, columns= ['x', 'y','z']))
-				#print('df',df.shape)
-				self.ms.data = df
-				self.pc_pub.publish(self.ms)
+	def depthSt(self, file_list, ns):
+		DepthMap = FusionData.depth_laser_camer(file_list,self.a,ns)
+		plt.figure(figsize=(14,10),frameon=False)
+		plt.imshow(np.asarray(DepthMap))
+		plt.axis('off')
+		plt.savefig('/home/johan/Documents/Alignment/DatasetKitti/DepthMaps/'+str(a)+'.png',bbox_inches='tight',pad_inches=0)
+		print('Finish')
+		#self.image_pub.publish(self.bridge.cv2_to_imgmsg(cv_image, "bgr8"))
 
-				self.ICP(pointcloud1_path_refe,point_dir)
-				Out_ICP = pd.read_csv('/home/johan/refe_OutKK.csv')
-				Out_ICP = np.array(DataFrame(Out_ICP, columns= ['x', 'y','z']))
-				Out_ICP = Out_ICP[1:Out_ICP.shape[0],:]
-				f = np.vstack((self.PCdense,Out_ICP))
-				#print('f',f.shape) 				
-				self.PCdense = list(f)
-				fsave = DataFrame(f)
-				fsave.to_csv (pointcloud1_path_refe, index = None, header=True) #Don't forget to add '.csv' at the end of the path
-				self.mss.data = self.PCdense
-				self.pc_pub2.publish(self.mss)
+	def ICP(self):
+		print('a')
+		return M
 
-			self.a = self.a + 1
-			print(self.a)
-
-	def ICP(self,pointcloud1,pointcloud2):
-		#--------------- correr el ejecutable de c++ ------------------
-		icp_path="/home/johan/Libraries/libpointmatcher/build/examples"
-		runicp = subprocess.Popen([os.path.join(icp_path,"icp_simple"),pointcloud1,pointcloud2,'OutKK'],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-		runicp.wait()
-    
 def main(args):
 	print('Starting...')
 	rospy.init_node('sync_node', anonymous=True)
 	rospy.loginfo("sync_node on")
 
-	# Find number of PointClouds
-	point_dir = '/home/johan/Desktop/UAO Projects_2 final/KitiiDatabase/PointCloud_CSV_kitti_1/'
+	# Find Images
+	point_dir = '/home/johan/Documents/Alignment/DatasetKitti/Images/'
 	file_list = []
-	file_glob = os.path.join(point_dir, '*.csv')
+	file_glob = os.path.join(point_dir, '*.png')
 	file_list.extend(gfile.Glob(file_glob))
 	file_list = np.sort(file_list)
-	#print(len(file_list))
-	#print(type(file_list[0]),file_list[0:8])
-	sc = synchronizer()
-	sc.selec(file_list)
+
+	# Find Pointclouds
+	point_dir = '/home/johan/Documents/Alignment/DatasetKitti/PCD/'
+	file_list_pcd = []
+	file_glob = os.path.join(point_dir, '*.pcd')
+	file_list_pcd.extend(gfile.Glob(file_glob))
+	file_list_pcd = np.sort(file_list_pcd)
+
+	#segments => ns (5000 OK)
+	ns = 1000 
+	sc = DepthStimationMain()
+	sc.depthSt(file_list,file_list_pcd,ns)
   
 	try:
 		rospy.spin()
@@ -95,3 +71,4 @@ def main(args):
 if __name__ == '__main__':
   
     main(sys.argv)
+
