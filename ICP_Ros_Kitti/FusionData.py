@@ -21,7 +21,7 @@ import scipy.sparse.linalg
 from scipy.sparse.linalg import cgs
 
 
-df depth_laser_camer(file_list,idpoint,ns):
+def depth_laser_camer(file_list,idpoint,ns):
     '''Image and Sparse Laser Fusion'''
 
     basedir = '/home/johan/Desktop/UAO Projects_2/KitiiDatabase'
@@ -287,7 +287,6 @@ df depth_laser_camer(file_list,idpoint,ns):
     edges_pairs = {}
     many_edges_pairs = {}
 
-    a = time.time()
     for i in range(0,len(centers)):
         t=0
         for edge in edges:
@@ -582,7 +581,7 @@ df depth_laser_camer(file_list,idpoint,ns):
         for i in range(0,gray_image.shape[1]):
                    
             s = segments[j,i]
-            #uu_mat[j,i] = k1[s]
+            uu_mat[j,i] = k1[s]
             xx[t] = i
             yy[t] = j
             uu_o[t] = k1[s]
@@ -590,4 +589,4 @@ df depth_laser_camer(file_list,idpoint,ns):
     print uu_o.shape
 
     #print (uu_mat.shape, type(uu_mat))
-    return(uu_o)
+    return(uu_mat)

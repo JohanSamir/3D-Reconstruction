@@ -25,15 +25,32 @@ class DepthStimationMain():
 		self.pc_pub = rospy.Publisher('/Dense',PointCloud2,queue_size=2)
 		self.image_pub = rospy.Publisher("/image_output",Image, queue_size = 2)
 		self.a = 0
+		self.bridge = CvBridge()
 
 	def depthSt(self, file_list, ns):
-		DepthMap = FusionData.depth_laser_camer(file_list,self.a,ns)
-		plt.figure(figsize=(14,10),frameon=False)
-		plt.imshow(np.asarray(DepthMap))
-		plt.axis('off')
-		plt.savefig('/home/johan/Documents/Alignment/DatasetKitti/DepthMaps/'+str(a)+'.png',bbox_inches='tight',pad_inches=0)
-		print('Finish')
-		#self.image_pub.publish(self.bridge.cv2_to_imgmsg(cv_image, "bgr8"))
+
+		for point_dir in file_list:
+
+			imageMsg=Image
+			DepthMap = FusionData.depth_laser_camer(point_dir,self.a,ns)
+			print(DepthMap.shape, type(DepthMap))
+
+			img = np.stack((DepthMap,) * 3,-1) 
+			img = img.astype(np.uint8) 
+			grayed = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+			#imageMsg.height = DepthMap.shape[0]
+			#imageMsg.width = DepthMap.shape[0]
+			#imageMsg.data = DepthMap
+			
+			plt.figure(figsize=(14,10),frameon=False)
+			plt.imshow(np.asarray(DepthMap))
+			plt.axis('off')
+			plt.savefig('/home/johan/Documents/Alignment/DatasetKitti/DepthMaps/'+str(self.a)+'.png',bbox_inches='tight',pad_inches=0)
+			print('Finish')
+			self.image_pub.publish(self.bridge.cv2_to_imgmsg(grayed, "mono8"))
+			#self.image_pub.publish(imageMsg)
+			self.a = self.a +1
 
 	def ICP(self):
 		print('a')
@@ -61,7 +78,7 @@ def main(args):
 	#segments => ns (5000 OK)
 	ns = 1000 
 	sc = DepthStimationMain()
-	sc.depthSt(file_list,file_list_pcd,ns)
+	sc.depthSt(file_list,ns)
   
 	try:
 		rospy.spin()
