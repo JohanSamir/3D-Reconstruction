@@ -32,6 +32,7 @@ def depth_laser_camer(file_list,idpoint,ns):
     print(tr)
     dataset = pykitti.raw(basedir, date, drive)
     img = plt.imread(tr)
+    imgpub = img
     Velopoints = dataset.get_velo(idpoint) #67, image 67
 
     #Loading the calibration parameters
@@ -588,5 +589,14 @@ def depth_laser_camer(file_list,idpoint,ns):
             t = t+1   
     print uu_o.shape
 
+    '''
+    f, ax1 = plt.subplots(1, 1, sharey=True)
+    f.set_size_inches(14, 10)
+    gamma_corrected = exposure.adjust_gamma(imgpub, 0.4)
+    ax1.imshow(mark_boundaries(gamma_corrected , segments,color=(0, 0, 0)))
+    plt.scatter(xx,yy, marker=".",c=uu_o, cmap=plt.cm.jet)
+    plt.axis('off')
+    plt.savefig('/home/johan/Documents/Alignment/DatasetKitti/DepthMaps/'+str(idpoint)+'.png',bbox_inches='tight',pad_inches=0)
+    '''
     #print (uu_mat.shape, type(uu_mat))
-    return(uu_mat)
+    return(xx,yy,uu_o,imgpub)

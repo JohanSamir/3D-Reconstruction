@@ -17,6 +17,9 @@ import pandas as pd
 from tensorflow.python.platform import gfile
 import matplotlib.pyplot as plt
 import FusionData
+#import cmapy
+from skimage import exposure
+from skimage.segmentation import mark_boundaries
 
 class DepthStimationMain():
 
@@ -24,6 +27,7 @@ class DepthStimationMain():
 
 		self.pc_pub = rospy.Publisher('/Dense',PointCloud2,queue_size=2)
 		self.image_pub = rospy.Publisher("/image_output",Image, queue_size = 2)
+		#self.image_pub_in = rospy.Publisher("/image_in",Image, queue_size = 2)
 		self.a = 0
 		self.bridge = CvBridge()
 
@@ -32,23 +36,42 @@ class DepthStimationMain():
 		for point_dir in file_list:
 
 			imageMsg=Image
-			DepthMap = FusionData.depth_laser_camer(point_dir,self.a,ns)
-			print(DepthMap.shape, type(DepthMap))
+			xx,yy,uu_mat,imgpub = FusionData.depth_laser_camer(point_dir,self.a,ns)
+			#print(xx.shape, type(yy))
+			#print(type(imgpub),imgpub.shape)
 
+			img = (np.stack((uu_mat,) * 3,-1))
+			img = uu_mat.astype(np.uint8) 
+
+			#grayed = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+			#img_colorized = cv2.applyColorMap(img, cv2.COLORMAP_JET)
+			#COLORMAP_HSV (it works better)
+			#cv2.COLORMAP_PINK
+			img_colorized = cv2.applyColorMap(img, cv2.COLORMAP_HSV)
+
+			#bgr_color = cmapy.color(DepthMap,'viridis', 100)
+
+			'''
 			img = np.stack((DepthMap,) * 3,-1) 
 			img = img.astype(np.uint8) 
+			#grayed = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 			grayed = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+			
+			# Colorize.
+			#img_colorized = cv2.applyColorMap(grayed, cmapy.cmap('Set1'))
+			img_colorized = cv2.applyColorMap(grayed, cv2.COLORMAP_JET)
 
 			#imageMsg.height = DepthMap.shape[0]
 			#imageMsg.width = DepthMap.shape[0]
 			#imageMsg.data = DepthMap
-			
+			'''
 			plt.figure(figsize=(14,10),frameon=False)
-			plt.imshow(np.asarray(DepthMap))
+			plt.imshow(np.asarray(uu_mat))
 			plt.axis('off')
 			plt.savefig('/home/johan/Documents/Alignment/DatasetKitti/DepthMaps/'+str(self.a)+'.png',bbox_inches='tight',pad_inches=0)
 			print('Finish')
-			self.image_pub.publish(self.bridge.cv2_to_imgmsg(grayed, "mono8"))
+			self.image_pub.publish(self.bridge.cv2_to_imgmsg(img_colorized, "bgr8"))
+			#self.image_pub_in.publish(self.bridge.cv2_to_imgmsg(img_in, "bgr8"))
 			#self.image_pub.publish(imageMsg)
 			self.a = self.a +1
 
@@ -76,7 +99,7 @@ def main(args):
 	file_list_pcd = np.sort(file_list_pcd)
 
 	#segments => ns (5000 OK)
-	ns = 1000 
+	ns = 5000 
 	sc = DepthStimationMain()
 	sc.depthSt(file_list,ns)
   
